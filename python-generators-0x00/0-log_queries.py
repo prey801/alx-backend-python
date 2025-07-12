@@ -23,7 +23,7 @@ def fetch_all_users(query):
     results = cursor.fetchall()
     connection.close()
     return results
-
+# 0-log_queries.py
 # ✅ Call the function and log the query
 users = fetch_all_users(query="SELECT * FROM user_data")
 print(users)
