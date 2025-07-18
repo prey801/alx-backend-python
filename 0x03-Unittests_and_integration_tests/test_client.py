@@ -47,4 +47,3 @@ class TestGithubOrgClient(unittest.TestCase):
             self.assertEqual(result, ["repo1", "repo2", "repo3"])
             mock_get_json.assert_not_called()
             mock_public_url.assert_not_called()
-            print("a_method called")
