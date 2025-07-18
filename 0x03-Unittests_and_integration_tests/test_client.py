@@ -1,6 +1,4 @@
 #!/usr/bin/env python3
-"""Unit tests for GithubOrgClient."""
-
 from unittest import TestCase
 from unittest.mock import patch, Mock
 from parameterized import parameterized
@@ -19,8 +17,8 @@ class TestGithubOrgClient(TestCase):
     @patch('client.GithubOrgClient.get_json')
     def test_org(self, org_name, mock_get_json):
         """
-        Test that GithubOrgClient.org returns correct data and
-        that get_json is called exactly once with correct URL.
+        Test that GithubOrgClient.org returns correct data 
+        and get_json  once every call with correct URL.
         """
         expected_payload = {"login": org_name}
         mock_get_json.return_value = expected_payload
