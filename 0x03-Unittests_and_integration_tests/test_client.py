@@ -41,8 +41,6 @@ class TestGithubOrgClient(unittest.TestCase):
             self.assertEqual(result, ["repo1", "repo2", "repo3"])
             mock_get_json.assert_called_once_with(test_url)
             mock_public_url.assert_called_once()
-            mock_get_json.reset_mock()
-            mock_public_url.reset_mock()
             # Ensure it does not call the method again
             result = client.public_repos()
             self.assertEqual(result, ["repo1", "repo2", "repo3"])
