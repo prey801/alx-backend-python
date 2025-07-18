@@ -13,7 +13,8 @@ class TestMemoize(unittest.TestCase):
 
     def test_memoize(self):
         """
-        Test that a memoized method is only called once and returns the correct value.
+        Test that a memoized method is only called once and returns
+        the correct value.
         """
         class TestClass:
             def a_method(self):
