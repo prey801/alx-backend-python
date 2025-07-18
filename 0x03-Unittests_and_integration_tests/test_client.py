@@ -28,15 +28,23 @@ class TestGithubOrgClient(unittest.TestCase):
             {"name": "repo3"},
         ]
         mock_get_json.return_value = test_repos_payload
-
         test_url = "https://api.github.com/orgs/test-org/repos"
 
-        with patch.object(GithubOrgClient, "_public_repos_url", return_value=test_url) as mock_public_url:
+        with patch.object(
+            GithubOrgClient,
+            "_public_repos_url",
+            return_value=test_url
+        ) as mock_public_url:
             client = GithubOrgClient("test-org")
             result = client.public_repos()
             self.assertEqual(result, ["repo1", "repo2", "repo3"])
-
             mock_get_json.assert_called_once_with(test_url)
             mock_public_url.assert_called_once()
             mock_get_json.reset_mock()
-            
+            mock_public_url.reset_mock()
+            # Ensure it does not call the method again
+            result = client.public_repos()
+            self.assertEqual(result, ["repo1", "repo2", "repo3"])
+            mock_get_json.assert_not_called()
+            mock_public_url.assert_not_called()
+            print("a_method called")
