@@ -42,10 +42,11 @@ class TestGithubOrgClient(unittest.TestCase):
             mock_get_json.assert_called_once_with(test_url)
             mock_public_url.assert_called_once()
             # Ensure it does not call the method again
+            client = GithubOrgClient("test-org")
             result = client.public_repos()
             self.assertEqual(result, ["repo1", "repo2", "repo3"])
-            mock_get_json.assert_not_called()
-            mock_public_url.assert_not_called()
+            mock_get_json.assert_called_once()
+            mock_public_url.assert_called_once()
 
     @parameterized.parameterized.expand([
         ({"license": {"key": "my_license"}}, "my_license", True),
