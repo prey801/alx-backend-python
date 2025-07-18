@@ -2,21 +2,21 @@
 """Unit tests for GithubOrgClient."""
 
 from unittest import TestCase
-from unittest.mock import patch
+from unittest.mock import patch, Mock
 from parameterized import parameterized
 from client import GithubOrgClient
+import client
 
 
 class TestGithubOrgClient(TestCase):
     """
     Unit tests for GithubOrgClient.org method.
     """
-
     @parameterized.expand([
         ("google",),
         ("abc",),
     ])
-    @patch("client.get_json")
+    @patch('client.GithubOrgClient.get_json')
     def test_org(self, org_name, mock_get_json):
         """
         Test that GithubOrgClient.org returns correct data and
