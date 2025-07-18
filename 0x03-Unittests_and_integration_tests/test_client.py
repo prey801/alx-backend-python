@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 """Unit tests for GithubOrgClient."""
 
-import unittest
 from unittest import TestCase
 from unittest.mock import patch
 from parameterized import parameterized
