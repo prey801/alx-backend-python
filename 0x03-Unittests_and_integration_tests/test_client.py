@@ -1,21 +1,25 @@
 #!/usr/bin/env python3
-"""GitHub API client."""
+"""Unit tests for GithubOrgClient."""
 
-from utils import get_json, memoize
+import unittest
+from unittest.mock import patch, PropertyMock
+from client import GithubOrgClient
 
 
-class GithubOrgClient:
-    """Client for GitHub organization operations."""
+class TestGithubOrgClient(unittest.TestCase):
+    """Unit tests for GithubOrgClient class."""
 
-    def __init__(self, org_name: str):
-        self.org_name = org_name
+    def test_public_repos_url(self):
+        """
+        Test that _public_repos_url returns the correct repos_url
+        from the org property.
+        """
+        expected_url = "https://api.github.com/orgs/test-org/repos"
+        payload = {"repos_url": expected_url}
 
-    @memoize
-    def org(self):
-        """Get organization details."""
-        return get_json(f"https://api.github.com/orgs/{self.org_name}")
-
-    @property
-    def _public_repos_url(self):
-        """Get the URL to the public repositories of the organization."""
-        return self.org.get("repos_url")
+        with patch.object(
+            GithubOrgClient, "org", new_callable=PropertyMock
+        ) as mock_org:
+            mock_org.return_value = payload
+            client = GithubOrgClient("test-org")
+            self.assertEqual(client._public_repos_url, expected_url)
