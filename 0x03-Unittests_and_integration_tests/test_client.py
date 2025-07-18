@@ -4,8 +4,7 @@
 import unittest
 from unittest.mock import patch, PropertyMock
 from client import GithubOrgClient
-import parameterized
-import requests
+from parameterized import parameterized, parameterized_class
 from fixtures import org_payload, repos_payload, expected_repos, apache2_repos
 
 
@@ -60,7 +59,7 @@ class TestGithubOrgClient(unittest.TestCase):
         self.assertEqual(result, expected)
 
 
-@parameterized.parameterized_class(
+@parameterized_class(
     ("org_payload", "repos_payload", "expected_repos", "apache2_repos"),
     [
         (org_payload, repos_payload, expected_repos, apache2_repos),
