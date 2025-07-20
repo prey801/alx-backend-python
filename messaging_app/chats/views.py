@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from rest_framework import viewsets, status
+from rest_framework import viewsets, status, filters
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from .models import Conversation, Message
@@ -8,6 +8,9 @@ from .serializers import ConversationSerializer, MessageSerializer
 class ConversationViewSet(viewsets.ModelViewSet):
     queryset = Conversation.objects.all()
     serializer_class = ConversationSerializer
+    filter_backends = [filters.SearchFilter, filters.OrderingFilter]
+    search_fields = ['title', 'participants__username']  # Adjust fields based on your Conversation model
+    ordering_fields = ['created_at', 'updated_at']  # Adjust fields based on your model
 
     @action(detail=True, methods=['post'])
     def send_message(self, request, pk=None):
@@ -24,6 +27,9 @@ class ConversationViewSet(viewsets.ModelViewSet):
 class MessageViewSet(viewsets.ModelViewSet):
     queryset = Message.objects.all()
     serializer_class = MessageSerializer
+    filter_backends = [filters.SearchFilter, filters.OrderingFilter]
+    search_fields = ['content', 'sender__username'] 
+    ordering_fields = ['timestamp', 'sender'] 
 
     def get_queryset(self):
         conversation_id = self.request.query_params.get('conversation', None)
