@@ -17,9 +17,7 @@ class User(AbstractUser):
     email = models.EmailField(
         unique=True, 
         null=False)
-    password_hash = models.CharField(
-        max_length=255, 
-        null=False)
+    # Remove password_hash as AbstractUser already provides password field
     phone_number = models.CharField(
         max_length=15, 
         null=True, 

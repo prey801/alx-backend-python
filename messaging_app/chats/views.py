@@ -9,18 +9,18 @@ class ConversationViewSet(viewsets.ModelViewSet):
     queryset = Conversation.objects.all()
     serializer_class = ConversationSerializer
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
-    search_fields = ['title', 'participants__username']  # Adjust fields based on your Conversation model
-    ordering_fields = ['created_at', 'updated_at']  # Adjust fields based on your model
+    search_fields = ['participants__username']  # Search by participant username
+    ordering_fields = ['created_at']  # Order by created_at
 
     @action(detail=True, methods=['post'])
     def send_message(self, request, pk=None):
         conversation = self.get_object()
         message_data = request.data
-        message_data['conversation'] = conversation.id
+        message_data['conversation'] = conversation.conversation_id
         
         serializer = MessageSerializer(data=message_data)
         if serializer.is_valid():
-            serializer.save()
+            serializer.save(sender=request.user)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -28,8 +28,8 @@ class MessageViewSet(viewsets.ModelViewSet):
     queryset = Message.objects.all()
     serializer_class = MessageSerializer
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
-    search_fields = ['content', 'sender__username'] 
-    ordering_fields = ['timestamp', 'sender'] 
+    search_fields = ['message_body', 'sender__username'] 
+    ordering_fields = ['sent_at', 'sender']
 
     def get_queryset(self):
         conversation_id = self.request.query_params.get('conversation', None)

@@ -4,7 +4,7 @@ from .models import User, Conversation, Message
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['id', 'username', 'email']
+        fields = ['user_id', 'username', 'email', 'first_name', 'last_name']
 
 class MessageSerializer(serializers.ModelSerializer):
     sender = UserSerializer(read_only=True)
@@ -12,9 +12,9 @@ class MessageSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Message
-        fields = ['id', 'sender', 'sender_username', 'content', 'timestamp']
+        fields = ['message_id', 'sender', 'sender_username', 'message_body', 'sent_at']
         
-    def validate_content(self, value):
+    def validate_message_body(self, value):
         if not value.strip():
             raise serializers.ValidationError("Message content cannot be empty")
         return value
@@ -27,10 +27,10 @@ class ConversationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Conversation
-        fields = ['id', 'title', 'participants', 'messages', 'last_message', 'participant_count']
+        fields = ['conversation_id', 'participants', 'messages', 'last_message', 'participant_count', 'created_at']
 
     def get_last_message(self, obj):
-        last_message = obj.messages.order_by('-timestamp').first()
+        last_message = obj.messages.order_by('-sent_at').first()
         return MessageSerializer(last_message).data if last_message else None
 
     def get_participant_count(self, obj):
