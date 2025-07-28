@@ -40,7 +40,7 @@ class OffensiveLanguageMiddleware:
         return ip
 
 
-class RolePermissionMiddleware:
+class RolepermissionMiddleware:
     """
     Middleware to allow only users with 'admin' or 'moderator' roles to access certain actions.
     """
@@ -52,7 +52,6 @@ class RolePermissionMiddleware:
             user_role = getattr(request.user, 'role', None)
             allowed_roles = ['admin', 'moderator']
 
-            # Apply restriction on admin panel or unsafe HTTP methods
             if request.path.startswith('/admin/') or request.method in ['POST', 'PUT', 'PATCH', 'DELETE']:
                 if user_role not in allowed_roles:
                     return JsonResponse(
