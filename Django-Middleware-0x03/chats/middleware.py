@@ -1,25 +1,18 @@
 # chats/middleware.py
 
-import logging
-from datetime import datetime
-
-# Configure logging
-logger = logging.getLogger(__name__)
-handler = logging.FileHandler('requests.log')
-formatter = logging.Formatter('%(message)s')
-handler.setFormatter(formatter)
-logger.addHandler(handler)
-logger.setLevel(logging.INFO)
+from datetime import datetime, time
+from django.http import HttpResponse
 
 
-class RequestLoggingMiddleware:
+class RestrictAccessByTimeMiddleware:
     def __init__(self, get_response):
         self.get_response = get_response
+        # Define allowed time range (e.g., 08:00 to 18:00)
+        self.start_time = time(8, 0, 0)
+        self.end_time = time(18, 0, 0)
 
     def __call__(self, request):
-        user = request.user if request.user.is_authenticated else 'Anonymous'
-        log_message = f"{datetime.now()} - User: {user} - Path: {request.path}"
-        logger.info(log_message)
-
-        response = self.get_response(request)
-        return response
+        now = datetime.now().time()
+        if not self.start_time <= now <= self.end_time:
+            return HttpResponse("Access is restricted outside of working hours (8 AM - 6 PM).", status=403)
+        return self.get_response(request)
